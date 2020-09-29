@@ -79,6 +79,10 @@ function displayList() {
         $li.appendChild($textSpan)
         $li.appendChild($amountSpan)
 
+        $li.setAttribute("id", item.text)
+        $li.setAttribute("onclick", "removeItem(event)")
+        $li.style.cursor = "pointer"
+
         if (item.amount >= 0)
             $li.style.borderRight = "7px solid #32e0c4"
         else
@@ -115,4 +119,31 @@ function calculateExpense() {
     $totalBalance.innerHTML = `$${totalBalance}`
     $income.innerHTML = `+$${income}`
     $spent.innerHTML = `-$${spent}`
+}
+
+function removeItem(e) {
+
+    // function will remove the clicked item from transaction history after asking for confirmation
+
+    let isDelete = confirm(`Are you sure you want to delete ${e.srcElement.id} ?`)
+
+
+    if (isDelete) {
+        index = 0
+
+        while (index < expense.length) {
+
+            if (expense[index].text == e.srcElement.id) {
+                expense.splice(index, 1)
+                break;
+            }
+            index++
+        }
+
+        console.log(expense)
+
+        localStorage.setItem("expense", JSON.stringify(expense));
+        displayList()
+        calculateExpense()
+    }
 }
